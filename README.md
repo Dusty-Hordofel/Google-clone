@@ -122,3 +122,7 @@ export default function HomeHeader() {
   );
 }
 ```
+
+## Section4: Body
+
+### 4. Body Section
