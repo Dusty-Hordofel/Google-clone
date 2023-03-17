@@ -313,6 +313,13 @@ export default function Footer() {
 }
 ```
 
+## Section6: Search
+
+### 6. Search Page
+
+- create [ImageSearchPage](./src/app/search/image/page.jsx)
+- create [WebSearchPage](./src/app/search/web/page.jsx)
+
 ## External Link
 
 - [Random Word API](http://random-word-api.herokuapp.com/home)
