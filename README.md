@@ -320,6 +320,135 @@ export default function Footer() {
 - create [ImageSearchPage](./src/app/search/image/page.jsx)
 - create [WebSearchPage](./src/app/search/web/page.jsx)
 
+### 7. Update the Search Header Component
+
+- create [SearchBox](./src/components/SearchBox.jsx)
+
+```js
+"use client";
+
+import { useSearchParams, useRouter } from "next/navigation";
+
+import { RxCross2 } from "react-icons/rx";
+import { BsFillMicFill } from "react-icons/bs";
+import { AiOutlineSearch } from "react-icons/ai";
+import { useState } from "react";
+
+export default function SearchBox() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchTerm = searchParams.get("searchTerm");
+  const [term, setTerm] = useState(searchTerm || "");
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!term.trim()) return;
+    router.push(`/search/web?searchTerm=${term}`);
+  }
+  return (
+    <form
+      className="flex border border-gray-200 rounded-full shadow-lg px-6 py-3 ml-10 mr-5 flex-grow max-w-3xl items-center"
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="text"
+        className="w-full focus:outline-none"
+        value={term}
+        onChange={(e) => setTerm(e.target.value)}
+      />
+      <RxCross2
+        className="text-2xl text-gray-500 cursor-pointer sm:mr-2"
+        onClick={() => setTerm("")}
+      />
+      <BsFillMicFill className="hidden sm:inline-flex text-4xl text-blue-500 pl-4 border-l-2 border-gray-300 mr-3" />
+      <AiOutlineSearch
+        className="text-2xl hidden sm:inline-flex text-blue-500 cursor-pointer"
+        onClick={handleSubmit}
+      />
+    </form>
+  );
+}
+```
+
+- update [SearchHeader](./src/components/SearchHeader.jsx)
+
+```js
+import Image from "next/image";
+import Link from "next/link";
+import SearchBox from "./SearchBox";
+import { RiSettings3Line } from "react-icons/ri";
+import { TbGridDots } from "react-icons/tb";
+// import SearchHeaderOptions from "./SearchHeaderOptions";
+
+export default function SearchHeader() {
+  return (
+    <header className="sticky top-0 bg-white">
+      <div className="flex items-center justify-between w-full p-6">
+        <Link href={"/"}>
+          <Image
+            width="120"
+            height="40"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/640px-Google_2015_logo.svg.png"
+          />
+        </Link>
+        <div className="flex-1">
+          <SearchBox />
+        </div>
+        <div className="hidden space-x-2 md:inline-flex ">
+          <RiSettings3Line className="header-icon" />
+          <TbGridDots className="header-icon" />
+        </div>
+        <button className="px-6 py-2 ml-2 font-medium text-white transition-all bg-blue-500 rounded-md hover:brightness-105 hover:shadow-md">
+          Sign in
+        </button>
+      </div>
+      {/* <SearchHeaderOptions /> */}
+    </header>
+  );
+}
+```
+
+- create [SearchHeaderOptions]()
+
+```js
+"use client";
+
+import { AiOutlineCamera, AiOutlineSearch } from "react-icons/ai";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+export default function SearchHeaderOptions() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get("searchTerm");
+  function selectTab(tab) {
+    router.push(
+      `/search/${tab === "Images" ? "image" : "web"}?searchTerm=${searchTerm}`
+    );
+  }
+  return (
+    <div className="flex space-x-2 select-none border-b w-full justify-center lg:justify-start lg:pl-52 text-gray-700 text-sm">
+      <div
+        onClick={() => selectTab("All")}
+        className={`flex items-center space-x-1 border-b-4 border-transparent active:text-blue-500 cursor-pointer pb-3 px-2 ${
+          pathname === "/search/web" && "!text-blue-600 !border-blue-600"
+        }`}
+      >
+        <AiOutlineSearch className="text-md" />
+        <p>All</p>
+      </div>
+      <div
+        onClick={() => selectTab("Images")}
+        className={`flex items-center space-x-1 border-b-4 border-transparent active:text-blue-500 cursor-pointer pb-3 px-2 ${
+          pathname === "/search/image" && "!text-blue-600 !border-blue-600"
+        }`}
+      >
+        <AiOutlineCamera className="text-md" />
+        <p>Images</p>
+      </div>
+    </div>
+  );
+}
+```
+
 ## External Link
 
 - [Random Word API](http://random-word-api.herokuapp.com/home)
