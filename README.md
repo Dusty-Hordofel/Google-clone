@@ -257,7 +257,66 @@ const HomeSearch = () => {
 export default HomeSearch;
 ```
 
+## Section5: Footer
+
+### 5. Footer Section
+
+- create [CountryLookup ](./src/components/CountryLookup.jsx)
+
+```js
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function CountryLookup() {
+  const [country, setCountry] = useState("United States");
+
+  useEffect(() => {
+    fetch(
+      `https://extreme-ip-lookup.com/json/?key=${process.env.NEXT_PUBLIC_IP_API_KEY}`
+    )
+      .then((res) => res.json())
+      .then((data) => setCountry(data.country));
+  }, []);
+
+  return <div>{country}</div>;
+}
+```
+
+- create [Footer](./src/components/Footer.jsx)
+
+```js
+import CountryLookup from "./CountryLookup";
+
+export default function Footer() {
+  return (
+    <footer className="absolute bottom-0 text-sm text-gray-500 bg-[#f2f2f2] w-full">
+      <div className="px-8 py-3 border-b">
+        <CountryLookup />
+      </div>
+      <div className="flex flex-col items-center justify-between px-8 py-3 sm:flex-row space-y-7 sm:space-y-0">
+        <ul className="flex items-center space-x-6">
+          <li className="link">About</li>
+          <li className="link">Advertising</li>
+          <li className="link">Business</li>
+          <li className="link">How Search works</li>
+        </ul>
+
+        <ul className="flex items-center space-x-6">
+          <li className="link">Privacy</li>
+          <li className="link">Terms</li>
+          <li className="link">Settings</li>
+        </ul>
+      </div>
+    </footer>
+  );
+}
+```
+
 ## External Link
 
 - [Random Word API](http://random-word-api.herokuapp.com/home)
 - [loading.io](https://loading.io/)
+
+- [ IP Lookup ](https://extreme-ip-lookup.com/)
+-
