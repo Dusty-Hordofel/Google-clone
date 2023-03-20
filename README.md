@@ -463,6 +463,14 @@ export default function SearchHeaderOptions() {
 
 ### 9.Fetch Data Using Google Search API
 
+- complete [WebSearchPage](./src/app/search/web/page.jsx)
+
+  - use [Google Developers](https://developers.google.com/?hl=fr) && [Programmable Search Engine](https://developers.google.com/custom-search?hl=en)
+  - use [Google REST to Invoke the API](https://developers.google.com/custom-search/v1/using_rest?hl=en)
+  - use [Create a key](https://developers.google.com/custom-search/v1/introduction?hl=en#identify_your_application_to_google_with_api_key)
+  - create a context key using [Programmable Search Engine ID ](https://programmablesearchengine.google.com/controlpanel/all)
+  -
+
 - [WebSearchPage](./src/app/search/web/page.jsx)
 
 ```js
@@ -494,12 +502,35 @@ const WebSearchPage = async ({ searchParams }) => {
 export default WebSearchPage;
 ```
 
-- complete [WebSearchPage](./src/app/search/web/page.jsx)
-  - use [Google Developers](https://developers.google.com/?hl=fr) && [Programmable Search Engine](https://developers.google.com/custom-search?hl=en)
-  - use [Google REST to Invoke the API](https://developers.google.com/custom-search/v1/using_rest?hl=en)
-  - use [Create a key](https://developers.google.com/custom-search/v1/introduction?hl=en#identify_your_application_to_google_with_api_key)
-  - create a context key using [Programmable Search Engine ID ](https://programmablesearchengine.google.com/controlpanel/all)
-  -
+## Section8: Errors
+
+### 10.Handle Possible Errors
+
+- create [error](./src/app/search/error.jsx)
+
+```js
+"use client";
+
+import { useEffect } from "react";
+
+export default function Error({ error, reset }) {
+  useEffect(() => {
+    console.log("Error: ", error);
+  }, [error]);
+  return (
+    <div className="flex flex-col justify-center items-center pt-10">
+      <h1 className="text-3xl mb-4">Something went wrong</h1>
+      <button className="text-blue-500" onClick={() => reset()}>
+        Try again
+      </button>
+    </div>
+  );
+}
+```
+
+## Section9: Search Result
+
+### 11. Create Search Result Component
 
 ## External Link
 
