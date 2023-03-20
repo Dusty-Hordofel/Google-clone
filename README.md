@@ -313,6 +313,194 @@ export default function Footer() {
 }
 ```
 
+## Section6: Search
+
+### 6. Search Page
+
+- create [ImageSearchPage](./src/app/search/image/page.jsx)
+- create [WebSearchPage](./src/app/search/web/page.jsx)
+
+### 7. Update the Search Header Component
+
+![SearchHeader-Script Component](./public/SearchHeader-Script.png "Desktop Demo")
+
+NB: We put a [Layout](src/app/search/layout.jsx) in search folder because we want it to be accessible for [image](src/app/search/image/page.jsx) && [web](src/app/search/web/page.jsx) pages. Layout inside search folder will cover theses two pages.
+
+- update [SearchHeader](./src/components/SearchHeader.jsx)
+
+![SearchHeader Component](./public/SearchHeader.png "Desktop Demo")
+
+```js
+import Image from "next/image";
+import Link from "next/link";
+import SearchBox from "./SearchBox";
+import { RiSettings3Line } from "react-icons/ri";
+import { TbGridDots } from "react-icons/tb";
+import SearchHeaderOptions from "./SearchHeaderOptions";
+
+export default function SearchHeader() {
+  return (
+    <header className="sticky top-0 bg-white">
+      <div className="flex items-center justify-between w-full p-6">
+        <Link href={"/"}>
+          <Image
+            width="120"
+            height="40"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/640px-Google_2015_logo.svg.png"
+          />
+        </Link>
+        <div className="flex-1">
+          <SearchBox />
+        </div>
+        <div className="hidden space-x-2 md:inline-flex ">
+          <RiSettings3Line className="header-icon" />
+          <TbGridDots className="header-icon" />
+        </div>
+        <button className="px-6 py-2 ml-2 font-medium text-white transition-all bg-blue-500 rounded-md hover:brightness-105 hover:shadow-md">
+          Sign in
+        </button>
+      </div>
+      <SearchHeaderOptions />
+    </header>
+  );
+}
+```
+
+- create [SearchBox](./src/components/SearchBox.jsx)
+  ![SearchBox Component](./public/SearchBox.png "Desktop Demo")
+
+```js
+"use client";
+
+import { useSearchParams, useRouter } from "next/navigation";
+
+import { RxCross2 } from "react-icons/rx";
+import { BsFillMicFill } from "react-icons/bs";
+import { AiOutlineSearch } from "react-icons/ai";
+import { useState } from "react";
+
+export default function SearchBox() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchTerm = searchParams.get("searchTerm");
+  const [term, setTerm] = useState(searchTerm || "");
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!term.trim()) return;
+    router.push(`/search/web?searchTerm=${term}`);
+  }
+  return (
+    <form
+      className="flex border border-gray-200 rounded-full shadow-lg px-6 py-3 ml-10 mr-5 flex-grow max-w-3xl items-center"
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="text"
+        className="w-full focus:outline-none"
+        value={term}
+        onChange={(e) => setTerm(e.target.value)}
+      />
+      <RxCross2
+        className="text-2xl text-gray-500 cursor-pointer sm:mr-2"
+        onClick={() => setTerm("")}
+      />
+      <BsFillMicFill className="hidden sm:inline-flex text-4xl text-blue-500 pl-4 border-l-2 border-gray-300 mr-3" />
+      <AiOutlineSearch
+        className="text-2xl hidden sm:inline-flex text-blue-500 cursor-pointer"
+        onClick={handleSubmit}
+      />
+    </form>
+  );
+}
+```
+
+- create [SearchHeaderOptions]()
+  ![SearchHeaderOptions Component](./public/SearchHeaderOptions.png "Desktop Demo")
+
+```js
+"use client";
+
+import { AiOutlineCamera, AiOutlineSearch } from "react-icons/ai";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+export default function SearchHeaderOptions() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchTerm = searchParams.get("searchTerm");
+  function selectTab(tab) {
+    router.push(
+      `/search/${tab === "Images" ? "image" : "web"}?searchTerm=${searchTerm}`
+    );
+  }
+  return (
+    <div className="flex space-x-2 select-none border-b w-full justify-center lg:justify-start lg:pl-52 text-gray-700 text-sm">
+      <div
+        onClick={() => selectTab("All")}
+        className={`flex items-center space-x-1 border-b-4 border-transparent active:text-blue-500 cursor-pointer pb-3 px-2 ${
+          pathname === "/search/web" && "!text-blue-600 !border-blue-600"
+        }`}
+      >
+        <AiOutlineSearch className="text-md" />
+        <p>All</p>
+      </div>
+      <div
+        onClick={() => selectTab("Images")}
+        className={`flex items-center space-x-1 border-b-4 border-transparent active:text-blue-500 cursor-pointer pb-3 px-2 ${
+          pathname === "/search/image" && "!text-blue-600 !border-blue-600"
+        }`}
+      >
+        <AiOutlineCamera className="text-md" />
+        <p>Images</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Section7: Fetch Data From Google
+
+### 8.Update informations
+
+### 9.Fetch Data Using Google Search API
+
+- [WebSearchPage](./src/app/search/web/page.jsx)
+
+```js
+const WebSearchPage = async ({ searchParams }) => {
+  const response = await fetch(
+    `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}`
+  );
+
+  const data = await response.json();
+  console.log("🚀 ~ file: page.jsx:7 ~ WebSearchPage ~ data:", data);
+  const results = data.items;
+  if (!results) {
+    return (
+      <div className="flex flex-col items-center justify-center pt-10">
+        <h1 className="mb-4 text-3xl">No results found</h1>
+        <p className="text-lg">
+          Try searching for something else or go back to the homepage{" "}
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+        </p>
+      </div>
+    );
+  }
+  return <>{results && results.map((result) => <h1>{result.title}</h1>)}</>;
+  // return <>{results && <WebSearchResults results={data} />}</>;
+};
+
+export default WebSearchPage;
+```
+
+- complete [WebSearchPage](./src/app/search/web/page.jsx)
+  - use [Google Developers](https://developers.google.com/?hl=fr) && [Programmable Search Engine](https://developers.google.com/custom-search?hl=en)
+  - use [Google REST to Invoke the API](https://developers.google.com/custom-search/v1/using_rest?hl=en)
+  - use [Create a key](https://developers.google.com/custom-search/v1/introduction?hl=en#identify_your_application_to_google_with_api_key)
+  - create a context key using [Programmable Search Engine ID ](https://programmablesearchengine.google.com/controlpanel/all)
+  -
+
 ## External Link
 
 - [Random Word API](http://random-word-api.herokuapp.com/home)
