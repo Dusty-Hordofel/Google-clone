@@ -475,6 +475,8 @@ export default function SearchHeaderOptions() {
 
 ```js
 const WebSearchPage = async ({ searchParams }) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   const response = await fetch(
     `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}`
   );
@@ -531,6 +533,46 @@ export default function Error({ error, reset }) {
 ## Section9: Search Result
 
 ### 11. Create Search Result Component
+
+- install [html-react-parser](https://www.npmjs.com/package/html-react-parser)
+
+```bash
+npm i html-react-parser
+```
+
+- update [WebSearchResults](./src/components/WebSearchResults.jsx)
+
+```js
+import PaginationButtons from "./PaginationButtons";
+
+export default function WebSearchResults({ results }) {
+  return (
+    <div className="w-full mx-auto px-3 pb-40 sm:pb-24 sm:pl-[5%] md:pl-[14%] lg:pl-52">
+      <p className="text-gray-600 text-sm mb-5 mt-3">
+        About {results.searchInformation?.formattedTotalResults} results (
+        {results.searchInformation?.formattedSearchTime} seconds)
+      </p>
+      {results.items?.map((result) => (
+        <div className="mb-8 max-w-xl" key={result.link}>
+          <div className="group flex flex-col">
+            <Link className="text-sm truncate" href={result.link}>
+              {result.formattedUrl}
+            </Link>
+            <Link
+              className="group-hover:underline decoration-blue-800 text-xl truncate font-medium text-blue-800"
+              href={result.link}
+            >
+              {result.title}
+            </Link>
+          </div>
+          <p className="text-gray-600">{Parser(result.htmlSnippet)}</p>
+        </div>
+      ))}
+      <PaginationButtons />
+    </div>
+  );
+}
+```
 
 ## External Link
 
