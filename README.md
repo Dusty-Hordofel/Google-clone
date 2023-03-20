@@ -504,7 +504,7 @@ const WebSearchPage = async ({ searchParams }) => {
 export default WebSearchPage;
 ```
 
-## Section8: Errors
+## Section 8: Errors
 
 ### 10.Handle Possible Errors
 
@@ -530,7 +530,7 @@ export default function Error({ error, reset }) {
 }
 ```
 
-## Section9: Search Result
+## Section 9: Search Result
 
 ### 11. Create Search Result Component
 
@@ -572,6 +572,83 @@ export default function WebSearchResults({ results }) {
     </div>
   );
 }
+```
+
+### 12. Add image Result
+
+- create [ImageSearchResults](./src/components/ImageSearchResults.jsx)
+
+```js
+import Link from "next/link";
+// import PaginationButtons from "./PaginationButtons";
+
+export default function ImageSearchResults({ results }) {
+  return (
+    <div className="pb-40 mt-4 sm:pb-24">
+      <div className="grid grid-cols-1 px-3 space-x-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {results.items.map((result) => (
+          <div key={result.link} className="mb-8">
+            <div className="group">
+              <Link href={result.image.contextLink}>
+                <img
+                  src={result.link}
+                  alt={result.title}
+                  className="object-contain w-full transition-shadow h-60 group-hover:shadow-xl"
+                />
+              </Link>
+              <Link href={result.image.contextLink}>
+                <h2 className="text-xl truncate group-hover:underline">
+                  {result.title}
+                </h2>
+              </Link>
+              <Link href={result.image.contextLink}>
+                <p className="text-gray-600 group-hover:underline">
+                  {result.displayLink}
+                </p>
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="ml-16">{/* <PaginationButtons /> */}</div>
+    </div>
+  );
+}
+```
+
+- create [WebSearchImage](./src/app/search/image/page.jsx)
+
+```js
+import ImageSearchResults from "@/components/ImageSearchResults";
+
+const ImageSearchPage = async ({ searchParams }) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a slow connection, this prevents us from making too many requests, if not the API spits out. remove this line on production
+
+  const response = await fetch(
+    `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}&searchType=image`
+  );
+
+  const data = await response.json();
+  const results = data.items;
+  console.log("🚀 ~ file: page.jsx:13 ~ ImageSearchPage ~ results:", results);
+  if (!results) {
+    return (
+      <div className="flex flex-col items-center justify-center pt-10">
+        <h1 className="mb-4 text-3xl">No results found</h1>
+        <p className="text-lg">
+          Try searching for something else or go back to the homepage{" "}
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  return <>{results && <ImageSearchResults results={data} />}</>;
+};
+
+export default ImageSearchPage;
 ```
 
 ## External Link
