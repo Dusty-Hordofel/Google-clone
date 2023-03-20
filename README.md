@@ -322,7 +322,52 @@ export default function Footer() {
 
 ### 7. Update the Search Header Component
 
+![SearchHeader-Script Component](./public/SearchHeader-Script.png "Desktop Demo")
+
+NB: We put a [Layout](src/app/search/layout.jsx) in search folder because we want it to be accessible for [image](src/app/search/image/page.jsx) && [web](src/app/search/web/page.jsx) pages. Layout inside search folder will cover theses two pages.
+
+- update [SearchHeader](./src/components/SearchHeader.jsx)
+
+![SearchHeader Component](./public/SearchHeader.png "Desktop Demo")
+
+```js
+import Image from "next/image";
+import Link from "next/link";
+import SearchBox from "./SearchBox";
+import { RiSettings3Line } from "react-icons/ri";
+import { TbGridDots } from "react-icons/tb";
+import SearchHeaderOptions from "./SearchHeaderOptions";
+
+export default function SearchHeader() {
+  return (
+    <header className="sticky top-0 bg-white">
+      <div className="flex items-center justify-between w-full p-6">
+        <Link href={"/"}>
+          <Image
+            width="120"
+            height="40"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/640px-Google_2015_logo.svg.png"
+          />
+        </Link>
+        <div className="flex-1">
+          <SearchBox />
+        </div>
+        <div className="hidden space-x-2 md:inline-flex ">
+          <RiSettings3Line className="header-icon" />
+          <TbGridDots className="header-icon" />
+        </div>
+        <button className="px-6 py-2 ml-2 font-medium text-white transition-all bg-blue-500 rounded-md hover:brightness-105 hover:shadow-md">
+          Sign in
+        </button>
+      </div>
+      <SearchHeaderOptions />
+    </header>
+  );
+}
+```
+
 - create [SearchBox](./src/components/SearchBox.jsx)
+  ![SearchBox Component](./public/SearchBox.png "Desktop Demo")
 
 ```js
 "use client";
@@ -369,45 +414,8 @@ export default function SearchBox() {
 }
 ```
 
-- update [SearchHeader](./src/components/SearchHeader.jsx)
-
-```js
-import Image from "next/image";
-import Link from "next/link";
-import SearchBox from "./SearchBox";
-import { RiSettings3Line } from "react-icons/ri";
-import { TbGridDots } from "react-icons/tb";
-// import SearchHeaderOptions from "./SearchHeaderOptions";
-
-export default function SearchHeader() {
-  return (
-    <header className="sticky top-0 bg-white">
-      <div className="flex items-center justify-between w-full p-6">
-        <Link href={"/"}>
-          <Image
-            width="120"
-            height="40"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/640px-Google_2015_logo.svg.png"
-          />
-        </Link>
-        <div className="flex-1">
-          <SearchBox />
-        </div>
-        <div className="hidden space-x-2 md:inline-flex ">
-          <RiSettings3Line className="header-icon" />
-          <TbGridDots className="header-icon" />
-        </div>
-        <button className="px-6 py-2 ml-2 font-medium text-white transition-all bg-blue-500 rounded-md hover:brightness-105 hover:shadow-md">
-          Sign in
-        </button>
-      </div>
-      {/* <SearchHeaderOptions /> */}
-    </header>
-  );
-}
-```
-
 - create [SearchHeaderOptions]()
+  ![SearchHeaderOptions Component](./public/SearchHeaderOptions.png "Desktop Demo")
 
 ```js
 "use client";
@@ -448,6 +456,10 @@ export default function SearchHeaderOptions() {
   );
 }
 ```
+
+## Section7: Search
+
+### 8. Search Page
 
 ## External Link
 
