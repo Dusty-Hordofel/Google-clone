@@ -457,9 +457,49 @@ export default function SearchHeaderOptions() {
 }
 ```
 
-## Section7: Search
+## Section7: Fetch Data From Google
 
-### 8. Search Page
+### 8.Update informations
+
+### 9.Fetch Data Using Google Search API
+
+- [WebSearchPage](./src/app/search/web/page.jsx)
+
+```js
+const WebSearchPage = async ({ searchParams }) => {
+  const response = await fetch(
+    `https://www.googleapis.com/customsearch/v1?key=${process.env.GOOGLE_API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}`
+  );
+
+  const data = await response.json();
+  console.log("🚀 ~ file: page.jsx:7 ~ WebSearchPage ~ data:", data);
+  const results = data.items;
+  if (!results) {
+    return (
+      <div className="flex flex-col items-center justify-center pt-10">
+        <h1 className="mb-4 text-3xl">No results found</h1>
+        <p className="text-lg">
+          Try searching for something else or go back to the homepage{" "}
+          <Link href="/" className="text-blue-500">
+            Home
+          </Link>
+        </p>
+      </div>
+    );
+  }
+  return <>{results && results.map((result) => <h1>{result.title}</h1>)}</>;
+  // return <>{results && <WebSearchResults results={data} />}</>;
+};
+
+export default WebSearchPage;
+```
+
+- complete [WebSearchPage](./src/app/search/web/page.jsx)
+  - use [Google Developers](https://developers.google.com/?hl=fr) && [Programmable Search Engine](https://developers.google.com/custom-search?hl=en)
+  - use [Google REST to Invoke the API](https://developers.google.com/custom-search/v1/using_rest?hl=en)
+  - use [Create a key](https://developers.google.com/custom-search/v1/introduction?hl=en#identify_your_application_to_google_with_api_key)
+  - create a context key using [Programmable Search Engine ID ](https://programmablesearchengine.google.com/controlpanel/all)
+  -
 
 ## External Link
 

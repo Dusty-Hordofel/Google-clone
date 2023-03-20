@@ -1,7 +1,7 @@
 import React from "react";
 
-const WebSearchPage = () => {
+const WebSearchImage = () => {
   return <div>WebSearchPage</div>;
 };
 
-export default WebSearchPage;
+export default WebSearchImage;
